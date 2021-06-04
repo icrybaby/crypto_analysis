@@ -5,12 +5,7 @@ import pandas
 import pytz
 import requests
 
-BASE_URL = "https://query1.finance.yahoo.com/v7/finance/download/"
-interval = '1d'  # day's chart
-events = 'history'
-adjusted_close = True
-
-crypto = {"doge": "DOGE-INR"}
+import Constants
 
 
 def generate_current_timestamp():
@@ -19,27 +14,27 @@ def generate_current_timestamp():
     return int(datetime.datetime(today[0], today[1], today[2], 0, 0, tzinfo=timezone).timestamp())
 
 
-def call_service(type):
-    url = construct_url(type)
+def call_service(coin, currency):
+    url = construct_url(coin, currency)
     response = requests.get(url)
 
-    if response.status_code != 200:
+    if response.status_code != Constants.SUCCESS_RESPONSE_CODE:
         print("web service call failed with error code: ", response.status_code)
         raise Exception("ApiError")
     else:
         return response.content
 
 
-def construct_url(type):
+def construct_url(coin, currency):
     current_timestamp = generate_current_timestamp()
-    url = BASE_URL + crypto.get(type)
+    url = Constants.BASE_URL + Constants.CRYPTO_DICT.get(coin) + "-" + Constants.CURRENCY_DICT.get(currency)
     url += "?period1=1568764800&period2=" + str(current_timestamp)
-    url += "&interval=" + interval + "&events=" + events + "&includeAdjustedClose=" + str(adjusted_close).lower()
+    url += "&interval=" + Constants.INTERVAL_DAY + "&events=" + Constants.EVENTS_HISTORY + "&includeAdjustedClose=" + str(Constants.ADJUSTED_CLOSE_TRUE).lower()
     print("framed url: ", url)
 
     return url
 
 
-def load_stock_data(type):
-    stock_data = call_service(type)
+def load_stock_data(coin, currency):
+    stock_data = call_service(coin, currency)
     return pandas.read_csv(StringIO(str(stock_data, 'utf-8')))

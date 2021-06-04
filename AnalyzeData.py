@@ -4,19 +4,21 @@ dataframe = pandas.DataFrame()
 
 
 class AnalyzeData:
-    def __init__(self):
+    def __init__(self, processed_dataset):
+        AnalyzeData.dataframe = processed_dataset
+
         self.max_price = 0
         self.max_volume = 0
         self.max_volatility = 0
-        self.current_volume = dataframe.loc[len(dataframe): 'Volume']
-        self.current_price = dataframe.loc[len(dataframe): 'Adj Close']
-        self.current_volatility = dataframe.loc[len(dataframe): 'syn_volatility']
-        self.current_syn_sma_5 = dataframe.loc[len(dataframe): 'syn_sma_5']
-        self.current_syn_sma_10 = dataframe.loc[len(dataframe): 'syn_sma_10']
-        self.current_syn_sma_20 = dataframe.loc[len(dataframe): 'syn_sma_20']
-        self.current_syn_sma_50 = dataframe.loc[len(dataframe): 'syn_sma_50']
-        self.current_syn_sma_100 = dataframe.loc[len(dataframe): 'syn_sma_100']
-        self.current_syn_sma_200 = dataframe.loc[len(dataframe): 'syn_sma_200']
+        self.current_volume = processed_dataset.loc[len(processed_dataset): 'Volume']
+        self.current_price = processed_dataset.loc[len(processed_dataset): 'Adj Close']
+        self.current_volatility = processed_dataset.loc[len(processed_dataset): 'syn_volatility']
+        self.current_syn_sma_5 = processed_dataset.loc[len(processed_dataset): 'syn_sma_5']
+        self.current_syn_sma_10 = processed_dataset.loc[len(processed_dataset): 'syn_sma_10']
+        self.current_syn_sma_20 = processed_dataset.loc[len(processed_dataset): 'syn_sma_20']
+        self.current_syn_sma_50 = processed_dataset.loc[len(processed_dataset): 'syn_sma_50']
+        self.current_syn_sma_100 = processed_dataset.loc[len(processed_dataset): 'syn_sma_100']
+        self.current_syn_sma_200 = processed_dataset.loc[len(processed_dataset): 'syn_sma_200']
 
     def analyze_volume(self):
         max_row = dataframe[dataframe['Volume'] == dataframe['Volume'].max(skipna=True)]
@@ -57,3 +59,5 @@ class AnalyzeData:
 
         if self.current_price > self.max_price:
             print("current price: ", self.current_price, "crossed all time high price: ", self.max_price)
+        else:
+            self.analyze_moving_average()
