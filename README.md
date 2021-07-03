@@ -1,2 +1,2 @@
 # crypto_analysis
-Basic crypto coins analysis through Python and ml libraries
+crypto coins analysis through Python and ml libraries, prediction via LSTM model
